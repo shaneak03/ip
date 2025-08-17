@@ -63,6 +63,18 @@ public class Barry {
                     System.out.println(line);
                     continue;
 
+                case "unmark":
+                    if (index >= tasks.size() || index < 0) {
+                        System.out.println("Invalid task number!\n" + line);
+                        continue;
+                    }
+                    Task t = tasks.get(index);
+                    t.markUndone();
+                    System.out.printf("I have marked item %d as not done yet\n", index + 1);
+                    System.out.println(t);
+                    System.out.println(line);
+                    continue;
+
                 default:
                     tasks.add(new Task(input));
                     System.out.println(input);

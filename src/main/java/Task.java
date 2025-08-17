@@ -11,6 +11,10 @@ public class Task {
         this.isDone = true;
     }
 
+    public void markUndone() {
+        this.isDone = false;
+    }
+
     @Override
     public String toString() {
         String doneStatus = isDone ? "[X]" : "[ ]";
