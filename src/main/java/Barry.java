@@ -25,7 +25,11 @@ public class Barry {
             index = -1;
             String[] parts = input.split( " ");
             command = parts[0];
-            if (parts.length > 1) {
+            if (command.equalsIgnoreCase("mark") || command.equalsIgnoreCase("unmark")) {
+                if (parts.length < 2) {
+                    System.out.println("Please specify the task number!\n" + line);
+                    continue;
+                }
                 try {
                     index = Integer.parseInt(parts[1]) - 1;
                 } catch (NumberFormatException e) {
@@ -76,9 +80,52 @@ public class Barry {
                     continue;
 
                 default:
-                    tasks.add(new Task(input));
-                    System.out.println(input);
-                    System.out.println(line);
+                    if (parts.length < 2) {
+                        System.out.println("The description of a todo cannot be empty");
+                        System.out.println(line);
+                        break;
+                    }
+
+                    Task taskToAdd = null;
+
+                    switch (command.toLowerCase()) {
+                        case "todo":
+                            String toDoDesc = input.substring(5).trim();
+                            taskToAdd = new ToDoTask(toDoDesc);
+                            break;
+
+                        case "deadline":
+                            try {
+                                String[] deadlineParts = input.substring(9).split("/by", 2);
+                                String deadlineDesc = deadlineParts[0].trim();
+                                String deadline = deadlineParts[1].trim();
+                                taskToAdd = new DeadlineTask(deadlineDesc, deadline);
+                            } catch (Exception e) {
+                                System.out.println("Invalid deadline format! Use: deadline <desc> /by <date>");
+                            }
+                            break;
+
+                        case "event":
+                            try {
+                                String[] eventParts = input.substring(6).split("/from|/to");
+                                String desc = eventParts[0].trim();
+                                String from = eventParts[1].trim();
+                                String to = eventParts[2].trim();
+                                taskToAdd = new EventTask(desc, from, to);
+                            } catch (Exception e) {
+                                System.out.println("Invalid event format! Use: event <desc> /from <start> /to <end>");
+                            }
+                            break;
+                    }
+                    if (taskToAdd != null) {
+                        tasks.add(taskToAdd);
+                        System.out.println("I've added this task into your list:");
+                        System.out.println(taskToAdd);
+                        System.out.println(String.format("You now have %d task in the list", tasks.size()));
+                        System.out.println(line);
+                    } else {
+                        System.out.println("An error has occured, please try again");
+                    }
             }
         }
     }
