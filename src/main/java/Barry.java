@@ -25,7 +25,9 @@ public class Barry {
             index = -1;
             String[] parts = input.split( " ");
             command = parts[0];
-            if (command.equalsIgnoreCase("mark") || command.equalsIgnoreCase("unmark")) {
+            if (command.equalsIgnoreCase("mark") ||
+                command.equalsIgnoreCase("unmark") ||
+                command.equalsIgnoreCase("delete")) {
                 if (parts.length < 2) {
                     System.out.println("Please specify the task number!\n" + line);
                     continue;
@@ -77,6 +79,19 @@ public class Barry {
                         t.markUndone();
                         System.out.printf("I have marked item %d as not done yet\n", index + 1);
                         System.out.println(t);
+                        System.out.println(line);
+                        continue;
+
+                    case "delete":
+                        if (index >= tasks.size() || index < 0) {
+                            System.out.println("Invalid task number!\n" + line);
+                            continue;
+                        }
+                        Task taskToRemove = tasks.get(index);
+                        tasks.remove(index);
+                        System.out.println("I have removed the following task:");
+                        System.out.println(taskToRemove);
+                        System.out.println("Now you have " + tasks.size() + " tasks in your list");
                         System.out.println(line);
                         continue;
 
