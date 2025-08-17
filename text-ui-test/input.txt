@@ -1,0 +1,13 @@
+todo eat
+deadline sleep /by Today
+list
+event play /from now /to 5hourslater
+list
+mark 1
+mark 3
+list
+unmark 3
+unmark 2
+mark 2
+list
+bye
