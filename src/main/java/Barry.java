@@ -17,8 +17,7 @@ public class Barry {
         String input;
         String command;
         int index;
-        List<String> items = new ArrayList<>();
-        List<Boolean> done = new ArrayList<>();
+        List<Task> tasks = new ArrayList<>();
 
         while (true) {
             System.out.println("User: ");
@@ -45,28 +44,27 @@ public class Barry {
 
                 case "list":
                     System.out.println("Here are the tasks in your list: ");
-                    for (int i = 0; i < items.size(); i++) {
+                    for (int i = 0; i < tasks.size(); i++) {
                         int num = i + 1;
-                        String done_status = done.get(i) ? "[X]" : "[ ]";
-                        System.out.println(num + "." + done_status + " " + items.get(i));
+                        System.out.println(num + "." + tasks.get(i));
                     }
                     System.out.println(line);
                     continue;
 
                 case "mark":
-                    if (index >= done.size() || index < 0) {
+                    if (index >= tasks.size() || index < 0) {
                         System.out.println("Invalid task number!\n" + line);
                         continue;
                     }
-                    done.set(index, true);
+                    Task task = tasks.get(index);
+                    task.markDone();
                     System.out.printf("I have marked item %d as done\n", index + 1);
-                    System.out.println("[X] " + items.get(index));
+                    System.out.println(task);
                     System.out.println(line);
                     continue;
 
                 default:
-                    items.add(input);
-                    done.add(false);
+                    tasks.add(new Task(input));
                     System.out.println(input);
                     System.out.println(line);
             }
