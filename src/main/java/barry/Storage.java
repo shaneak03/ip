@@ -1,5 +1,12 @@
+package barry;
 
 import java.util.ArrayList;
+
+import barry.tasks.DeadlineTask;
+import barry.tasks.EventTask;
+import barry.tasks.Task;
+import barry.tasks.ToDoTask;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

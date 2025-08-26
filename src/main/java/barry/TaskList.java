@@ -1,4 +1,8 @@
+package barry;
+
 import java.util.ArrayList;
+
+import barry.tasks.Task;
 
 public class TaskList {
     private final ArrayList<Task> tasks;
