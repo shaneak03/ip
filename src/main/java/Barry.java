@@ -9,7 +9,7 @@ public class Barry {
     String command;
     int index;
     new Storage();
-    ArrayList<Task> tasks = Storage.load();
+    TaskList tasks = new TaskList(Storage.load());
 
         while (true) {
             input = ui.readCommand();
@@ -46,7 +46,7 @@ public class Barry {
                         ui.showMessage("Here are the tasks in your list: ");
                         for (int i = 0; i < tasks.size(); i++) {
                             int num = i + 1;
-                            ui.showMessage(num + "." + tasks.get(i));
+                            ui.showMessage(num + "." + tasks.getTask(i));
                         }
                         ui.showLine();
                         continue;
@@ -56,9 +56,9 @@ public class Barry {
                             ui.showError("Invalid task number!");
                             continue;
                         }
-                        Task task = tasks.get(index);
+                        Task task = tasks.getTask(index);
                         task.markDone();
-                        Storage.saveAllState(tasks);
+                        Storage.saveAllState(tasks.getAllTasks());
                         ui.showMessage(String.format("I have marked item %d as done", index + 1));
                         ui.showMessage(task.toString());
                         ui.showLine();
@@ -69,9 +69,9 @@ public class Barry {
                             ui.showError("Invalid task number!");
                             continue;
                         }
-                        Task t = tasks.get(index);
+                        Task t = tasks.getTask(index);
                         t.markUndone();
-                        Storage.saveAllState(tasks);
+                        Storage.saveAllState(tasks.getAllTasks());
                         ui.showMessage(String.format("I have marked item %d as not done yet", index + 1));
                         ui.showMessage(t.toString());
                         ui.showLine();
@@ -82,9 +82,9 @@ public class Barry {
                             ui.showError("Invalid task number!");
                             continue;
                         }
-                        Task taskToRemove = tasks.get(index);
-                        tasks.remove(index);
-                        Storage.saveAllState(tasks);
+                        Task taskToRemove = tasks.getTask(index);
+                        tasks.removeTask(index);
+                        Storage.saveAllState(tasks.getAllTasks());
                         ui.showMessage("I have removed the following task:");
                         ui.showMessage(taskToRemove.toString());
                         ui.showMessage("Now you have " + tasks.size() + " tasks in your list");
@@ -143,8 +143,8 @@ public class Barry {
                             }
                         }
                         if (taskToAdd != null) {
-                            tasks.add(taskToAdd);
-                            Storage.saveAllState(tasks);
+                            tasks.addTask(taskToAdd);
+                            Storage.saveAllState(tasks.getAllTasks());
                             ui.showMessage("I've added this task into your list:");
                             ui.showMessage(taskToAdd.toString());
                             ui.showMessage(String.format("You now have %d task in the list", tasks.size()));
