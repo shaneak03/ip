@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class Barry {
     public static void main(String[] args) {
@@ -16,18 +14,18 @@ public class Barry {
         while (true) {
             input = ui.readCommand();
             index = -1;
-            String[] parts = input.split(" ");
-            command = parts[0];
+            command = Parser.getCommand(input);
+            String arguments = Parser.getArguments(input);
             if (command.equalsIgnoreCase("mark") ||
                 command.equalsIgnoreCase("unmark") ||
                 command.equalsIgnoreCase("delete")) {
-                if (parts.length < 2) {
+                if (arguments.isEmpty()) {
                     ui.showError("Please specify the task number!");
                     ui.showLine();
                     continue;
                 }
                 try {
-                    index = Integer.parseInt(parts[1]) - 1;
+                    index = Integer.parseInt(arguments.split(" ")[0]) - 1;
                 } catch (NumberFormatException e) {
                     ui.showError("Invalid task number!");
                     ui.showLine();
@@ -94,7 +92,7 @@ public class Barry {
                         continue;
 
                     default:
-                        if (parts.length < 2) {
+                        if (arguments.isEmpty()) {
                             ui.showMessage("The description of a todo cannot be empty");
                             ui.showLine();
                             break;
@@ -104,14 +102,14 @@ public class Barry {
 
                         switch (command.toLowerCase()) {
                             case "todo":
-                                String toDoDesc = input.substring(5).trim();
+                                String toDoDesc = arguments.trim();
                                 taskToAdd = new ToDoTask(toDoDesc);
                                 break;
 
                             case "deadline": {
-                                String[] deadlineParts = input.substring(9).split("/by", 2);
+                                String[] deadlineParts = arguments.split("/by", 2);
                                 String deadlineDesc = deadlineParts[0].trim();
-                                String deadline = deadlineParts[1].trim();
+                                String deadline = deadlineParts.length > 1 ? deadlineParts[1].trim() : "";
                                 if (deadlineDesc.isEmpty() || deadline.isEmpty()) {
                                     throw new InvalidInputException("Deadline description and date/time cannot be empty");
                                 }
@@ -126,10 +124,10 @@ public class Barry {
                             }
 
                             case "event": {
-                                String[] eventParts = input.substring(6).split("/from|/to");
+                                String[] eventParts = arguments.split("/from|/to");
                                 String desc = eventParts[0].trim();
-                                String from = eventParts[1].trim();
-                                String to = eventParts[2].trim();
+                                String from = eventParts.length > 1 ? eventParts[1].trim() : "";
+                                String to = eventParts.length > 2 ? eventParts[2].trim() : "";
                                 if (desc.isEmpty() || from.isEmpty() || to.isEmpty()) {
                                     throw new InvalidInputException("Event description, start, and end cannot be empty");
                                 }
