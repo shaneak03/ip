@@ -20,7 +20,7 @@ User:
 ____________________________________________________________
 
 I've added this task into your list:
-[D][ ] sleep (by: Today)
+[D][ ] sleep (by: Aug 26 2025, 11:59pm)
 You now have 2 task in the list
 ____________________________________________________________
 
@@ -29,14 +29,14 @@ ____________________________________________________________
 
 Here are the tasks in your list: 
 1.[T][ ] eat
-2.[D][ ] sleep (by: Today)
+2.[D][ ] sleep (by: Aug 26 2025, 11:59pm)
 ____________________________________________________________
 
 User: 
 ____________________________________________________________
 
 I've added this task into your list:
-[E][ ] play (from: now to: 5hourslater)
+[E][ ] play (from: Aug 26 2025, 2:00pm to: Aug 26 2025, 6:00pm)
 You now have 3 task in the list
 ____________________________________________________________
 
@@ -45,8 +45,8 @@ ____________________________________________________________
 
 Here are the tasks in your list: 
 1.[T][ ] eat
-2.[D][ ] sleep (by: Today)
-3.[E][ ] play (from: now to: 5hourslater)
+2.[D][ ] sleep (by: Aug 26 2025, 11:59pm)
+3.[E][ ] play (from: Aug 26 2025, 2:00pm to: Aug 26 2025, 6:00pm)
 ____________________________________________________________
 
 User: 
@@ -60,7 +60,7 @@ User:
 ____________________________________________________________
 
 I have marked item 3 as done
-[E][X] play (from: now to: 5hourslater)
+[E][X] play (from: Aug 26 2025, 2:00pm to: Aug 26 2025, 6:00pm)
 ____________________________________________________________
 
 User: 
@@ -68,29 +68,29 @@ ____________________________________________________________
 
 Here are the tasks in your list: 
 1.[T][X] eat
-2.[D][ ] sleep (by: Today)
-3.[E][X] play (from: now to: 5hourslater)
+2.[D][ ] sleep (by: Aug 26 2025, 11:59pm)
+3.[E][X] play (from: Aug 26 2025, 2:00pm to: Aug 26 2025, 6:00pm)
 ____________________________________________________________
 
 User: 
 ____________________________________________________________
 
 I have marked item 3 as not done yet
-[E][ ] play (from: now to: 5hourslater)
+[E][ ] play (from: Aug 26 2025, 2:00pm to: Aug 26 2025, 6:00pm)
 ____________________________________________________________
 
 User: 
 ____________________________________________________________
 
 I have marked item 2 as not done yet
-[D][ ] sleep (by: Today)
+[D][ ] sleep (by: Aug 26 2025, 11:59pm)
 ____________________________________________________________
 
 User: 
 ____________________________________________________________
 
 I have marked item 2 as done
-[D][X] sleep (by: Today)
+[D][X] sleep (by: Aug 26 2025, 11:59pm)
 ____________________________________________________________
 
 User: 
@@ -98,8 +98,8 @@ ____________________________________________________________
 
 Here are the tasks in your list: 
 1.[T][X] eat
-2.[D][X] sleep (by: Today)
-3.[E][ ] play (from: now to: 5hourslater)
+2.[D][X] sleep (by: Aug 26 2025, 11:59pm)
+3.[E][ ] play (from: Aug 26 2025, 2:00pm to: Aug 26 2025, 6:00pm)
 ____________________________________________________________
 
 User: 
