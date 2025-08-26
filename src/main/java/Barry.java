@@ -1,108 +1,100 @@
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class Barry {
     public static void main(String[] args) {
-        String logo = "__________    _____ _________________________.___.\n"
-                      + "\\______   \\  /  _  \\\\______   \\______   \\__  |   |\n"
-                      + " |    |  _/ /  /_\\  \\|       _/|       _//   |   |\n"
-                      + " |    |   \\/    |    \\    |   \\|    |   \\\\____   |\n"
-                      + " |______  /\\____|__  /____|_  /|____|_  // ______|\n"
-                      + "        \\/         \\/       \\/        \\/ \\/    \n";
-        String line = "____________________________________________________________\n";
-        System.out.println("Hello I'm Barry\n" + logo + "What can I do for you?\n" + line);
 
-        Scanner sc = new Scanner(System.in);
-        String input;
-        String command;
-        int index;
-        new Storage();
-        ArrayList<Task> tasks = Storage.load();
+    Ui ui = new Ui();
+    ui.showWelcome();
+    String input;
+    String command;
+    int index;
+    new Storage();
+    TaskList tasks = new TaskList(Storage.load());
 
         while (true) {
-            System.out.println("User: ");
-            input = sc.nextLine();
+            input = ui.readCommand();
             index = -1;
-            String[] parts = input.split(" ");
-            command = parts[0];
+            command = Parser.getCommand(input);
+            String arguments = Parser.getArguments(input);
             if (command.equalsIgnoreCase("mark") ||
                 command.equalsIgnoreCase("unmark") ||
                 command.equalsIgnoreCase("delete")) {
-                if (parts.length < 2) {
-                    System.out.println("Please specify the task number!\n" + line);
+                if (arguments.isEmpty()) {
+                    ui.showError("Please specify the task number!");
+                    ui.showLine();
                     continue;
                 }
                 try {
-                    index = Integer.parseInt(parts[1]) - 1;
+                    index = Integer.parseInt(arguments.split(" ")[0]) - 1;
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid task number!\n" + line);
+                    ui.showError("Invalid task number!");
+                    ui.showLine();
                     continue;
                 }
             }
 
-            System.out.println(line);
+            ui.showLine();
 
             try {
                 switch (command.toLowerCase()) {
                     case "bye":
-                        System.out.println("Goodbye! Hope to see you again soon!");
-                        System.out.println(line);
+                        ui.showMessage("Goodbye! Hope to see you again soon!");
+                        ui.showLine();
                         return;
 
                     case "list":
-                        System.out.println("Here are the tasks in your list: ");
+                        ui.showMessage("Here are the tasks in your list: ");
                         for (int i = 0; i < tasks.size(); i++) {
                             int num = i + 1;
-                            System.out.println(num + "." + tasks.get(i));
+                            ui.showMessage(num + "." + tasks.getTask(i));
                         }
-                        System.out.println(line);
+                        ui.showLine();
                         continue;
 
                     case "mark":
                         if (index >= tasks.size() || index < 0) {
-                            System.out.println("Invalid task number!\n" + line);
+                            ui.showError("Invalid task number!");
                             continue;
                         }
-                        Task task = tasks.get(index);
+                        Task task = tasks.getTask(index);
                         task.markDone();
-                        Storage.saveAllState(tasks);
-                        System.out.printf("I have marked item %d as done\n", index + 1);
-                        System.out.println(task);
-                        System.out.println(line);
+                        Storage.saveAllState(tasks.getAllTasks());
+                        ui.showMessage(String.format("I have marked item %d as done", index + 1));
+                        ui.showMessage(task.toString());
+                        ui.showLine();
                         continue;
 
                     case "unmark":
                         if (index >= tasks.size() || index < 0) {
-                            System.out.println("Invalid task number!\n" + line);
+                            ui.showError("Invalid task number!");
                             continue;
                         }
-                        Task t = tasks.get(index);
+                        Task t = tasks.getTask(index);
                         t.markUndone();
-                        Storage.saveAllState(tasks);
-                        System.out.printf("I have marked item %d as not done yet\n", index + 1);
-                        System.out.println(t);
-                        System.out.println(line);
+                        Storage.saveAllState(tasks.getAllTasks());
+                        ui.showMessage(String.format("I have marked item %d as not done yet", index + 1));
+                        ui.showMessage(t.toString());
+                        ui.showLine();
                         continue;
 
                     case "delete":
                         if (index >= tasks.size() || index < 0) {
-                            System.out.println("Invalid task number!\n" + line);
+                            ui.showError("Invalid task number!");
                             continue;
                         }
-                        Task taskToRemove = tasks.get(index);
-                        tasks.remove(index);
-                        Storage.saveAllState(tasks);
-                        System.out.println("I have removed the following task:");
-                        System.out.println(taskToRemove);
-                        System.out.println("Now you have " + tasks.size() + " tasks in your list");
-                        System.out.println(line);
+                        Task taskToRemove = tasks.getTask(index);
+                        tasks.removeTask(index);
+                        Storage.saveAllState(tasks.getAllTasks());
+                        ui.showMessage("I have removed the following task:");
+                        ui.showMessage(taskToRemove.toString());
+                        ui.showMessage("Now you have " + tasks.size() + " tasks in your list");
+                        ui.showLine();
                         continue;
 
                     default:
-                        if (parts.length < 2) {
-                            System.out.println("The description of a todo cannot be empty");
-                            System.out.println(line);
+                        if (arguments.isEmpty()) {
+                            ui.showMessage("The description of a todo cannot be empty");
+                            ui.showLine();
                             break;
                         }
 
@@ -110,14 +102,14 @@ public class Barry {
 
                         switch (command.toLowerCase()) {
                             case "todo":
-                                String toDoDesc = input.substring(5).trim();
+                                String toDoDesc = arguments.trim();
                                 taskToAdd = new ToDoTask(toDoDesc);
                                 break;
 
                             case "deadline": {
-                                String[] deadlineParts = input.substring(9).split("/by", 2);
+                                String[] deadlineParts = arguments.split("/by", 2);
                                 String deadlineDesc = deadlineParts[0].trim();
-                                String deadline = deadlineParts[1].trim();
+                                String deadline = deadlineParts.length > 1 ? deadlineParts[1].trim() : "";
                                 if (deadlineDesc.isEmpty() || deadline.isEmpty()) {
                                     throw new InvalidInputException("Deadline description and date/time cannot be empty");
                                 }
@@ -132,10 +124,10 @@ public class Barry {
                             }
 
                             case "event": {
-                                String[] eventParts = input.substring(6).split("/from|/to");
+                                String[] eventParts = arguments.split("/from|/to");
                                 String desc = eventParts[0].trim();
-                                String from = eventParts[1].trim();
-                                String to = eventParts[2].trim();
+                                String from = eventParts.length > 1 ? eventParts[1].trim() : "";
+                                String to = eventParts.length > 2 ? eventParts[2].trim() : "";
                                 if (desc.isEmpty() || from.isEmpty() || to.isEmpty()) {
                                     throw new InvalidInputException("Event description, start, and end cannot be empty");
                                 }
@@ -151,19 +143,18 @@ public class Barry {
                             }
                         }
                         if (taskToAdd != null) {
-                            tasks.add(taskToAdd);
-                            Storage.saveAllState(tasks);
-                            System.out.println("I've added this task into your list:");
-                            System.out.println(taskToAdd);
-                            System.out.println(String.format("You now have %d task in the list", tasks.size()));
-                            System.out.println(line);
+                            tasks.addTask(taskToAdd);
+                            Storage.saveAllState(tasks.getAllTasks());
+                            ui.showMessage("I've added this task into your list:");
+                            ui.showMessage(taskToAdd.toString());
+                            ui.showMessage(String.format("You now have %d task in the list", tasks.size()));
+                            ui.showLine();
                         } else {
                             throw new UnknownCommandException("An error has occured, please try again");
                         }
                 }
             } catch (InvalidInputException | UnknownCommandException e) {
-                System.out.println(e.getMessage());
-                System.out.println(line);
+                ui.showError(e.getMessage());
             }
         }
     }
