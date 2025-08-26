@@ -114,28 +114,41 @@ public class Barry {
                                 taskToAdd = new ToDoTask(toDoDesc);
                                 break;
 
-                            case "deadline":
+                            case "deadline": {
+                                String[] deadlineParts = input.substring(9).split("/by", 2);
+                                String deadlineDesc = deadlineParts[0].trim();
+                                String deadline = deadlineParts[1].trim();
+                                if (deadlineDesc.isEmpty() || deadline.isEmpty()) {
+                                    throw new InvalidInputException("Deadline description and date/time cannot be empty");
+                                }
                                 try {
-                                    String[] deadlineParts = input.substring(9).split("/by", 2);
-                                    String deadlineDesc = deadlineParts[0].trim();
-                                    String deadline = deadlineParts[1].trim();
+                                    java.time.format.DateTimeFormatter deadlineFormat = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+                                    java.time.LocalDateTime.parse(deadline, deadlineFormat);
                                     taskToAdd = new DeadlineTask(deadlineDesc, deadline);
-                                } catch (Exception e) {
-                                    throw new EmptyDescriptionException("Invalid deadline format! Use: deadline <desc> /by <date>");
+                                } catch (java.time.format.DateTimeParseException e) {
+                                    throw new InvalidInputException("Invalid deadline format! Use: deadline <desc> /by <date> (yyyy-MM-dd HHmm)");
                                 }
                                 break;
+                            }
 
-                            case "event":
+                            case "event": {
+                                String[] eventParts = input.substring(6).split("/from|/to");
+                                String desc = eventParts[0].trim();
+                                String from = eventParts[1].trim();
+                                String to = eventParts[2].trim();
+                                if (desc.isEmpty() || from.isEmpty() || to.isEmpty()) {
+                                    throw new InvalidInputException("Event description, start, and end cannot be empty");
+                                }
                                 try {
-                                    String[] eventParts = input.substring(6).split("/from|/to");
-                                    String desc = eventParts[0].trim();
-                                    String from = eventParts[1].trim();
-                                    String to = eventParts[2].trim();
+                                    java.time.format.DateTimeFormatter eventFormat = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+                                    java.time.LocalDateTime.parse(from, eventFormat);
+                                    java.time.LocalDateTime.parse(to, eventFormat);
                                     taskToAdd = new EventTask(desc, from, to);
-                                } catch (Exception e) {
-                                    throw new EmptyDescriptionException("Invalid event format! Use: event <desc> /from <start> /to <end>");
+                                } catch (java.time.format.DateTimeParseException e) {
+                                    throw new InvalidInputException("Invalid event format! Use: event <desc> /from <start> /to <end> (yyyy-MM-dd HHmm)");
                                 }
                                 break;
+                            }
                         }
                         if (taskToAdd != null) {
                             tasks.add(taskToAdd);
@@ -148,11 +161,10 @@ public class Barry {
                             throw new UnknownCommandException("An error has occured, please try again");
                         }
                 }
-            } catch (EmptyDescriptionException | UnknownCommandException e) {
+            } catch (InvalidInputException | UnknownCommandException e) {
                 System.out.println(e.getMessage());
                 System.out.println(line);
             }
-            // No need to save here; already saved after each modification
         }
     }
 }
