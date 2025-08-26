@@ -17,13 +17,14 @@ public class Barry {
         String input;
         String command;
         int index;
-        List<Task> tasks = new ArrayList<>();
+        new Storage();
+        ArrayList<Task> tasks = Storage.load();
 
         while (true) {
             System.out.println("User: ");
             input = sc.nextLine();
             index = -1;
-            String[] parts = input.split( " ");
+            String[] parts = input.split(" ");
             command = parts[0];
             if (command.equalsIgnoreCase("mark") ||
                 command.equalsIgnoreCase("unmark") ||
@@ -65,6 +66,7 @@ public class Barry {
                         }
                         Task task = tasks.get(index);
                         task.markDone();
+                        Storage.saveAllState(tasks);
                         System.out.printf("I have marked item %d as done\n", index + 1);
                         System.out.println(task);
                         System.out.println(line);
@@ -77,6 +79,7 @@ public class Barry {
                         }
                         Task t = tasks.get(index);
                         t.markUndone();
+                        Storage.saveAllState(tasks);
                         System.out.printf("I have marked item %d as not done yet\n", index + 1);
                         System.out.println(t);
                         System.out.println(line);
@@ -89,6 +92,7 @@ public class Barry {
                         }
                         Task taskToRemove = tasks.get(index);
                         tasks.remove(index);
+                        Storage.saveAllState(tasks);
                         System.out.println("I have removed the following task:");
                         System.out.println(taskToRemove);
                         System.out.println("Now you have " + tasks.size() + " tasks in your list");
@@ -135,6 +139,7 @@ public class Barry {
                         }
                         if (taskToAdd != null) {
                             tasks.add(taskToAdd);
+                            Storage.saveAllState(tasks);
                             System.out.println("I've added this task into your list:");
                             System.out.println(taskToAdd);
                             System.out.println(String.format("You now have %d task in the list", tasks.size()));
@@ -147,6 +152,7 @@ public class Barry {
                 System.out.println(e.getMessage());
                 System.out.println(line);
             }
+            // No need to save here; already saved after each modification
         }
     }
 }

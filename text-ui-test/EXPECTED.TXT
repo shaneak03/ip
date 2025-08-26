@@ -36,7 +36,7 @@ User:
 ____________________________________________________________
 
 I've added this task into your list:
-[T][ ] play (from: now to: 5hourslater)
+[E][ ] play (from: now to: 5hourslater)
 You now have 3 task in the list
 ____________________________________________________________
 
@@ -46,7 +46,7 @@ ____________________________________________________________
 Here are the tasks in your list: 
 1.[T][ ] eat
 2.[D][ ] sleep (by: Today)
-3.[T][ ] play (from: now to: 5hourslater)
+3.[E][ ] play (from: now to: 5hourslater)
 ____________________________________________________________
 
 User: 
@@ -60,7 +60,7 @@ User:
 ____________________________________________________________
 
 I have marked item 3 as done
-[T][X] play (from: now to: 5hourslater)
+[E][X] play (from: now to: 5hourslater)
 ____________________________________________________________
 
 User: 
@@ -69,14 +69,14 @@ ____________________________________________________________
 Here are the tasks in your list: 
 1.[T][X] eat
 2.[D][ ] sleep (by: Today)
-3.[T][X] play (from: now to: 5hourslater)
+3.[E][X] play (from: now to: 5hourslater)
 ____________________________________________________________
 
 User: 
 ____________________________________________________________
 
 I have marked item 3 as not done yet
-[T][ ] play (from: now to: 5hourslater)
+[E][ ] play (from: now to: 5hourslater)
 ____________________________________________________________
 
 User: 
@@ -99,7 +99,7 @@ ____________________________________________________________
 Here are the tasks in your list: 
 1.[T][X] eat
 2.[D][X] sleep (by: Today)
-3.[T][ ] play (from: now to: 5hourslater)
+3.[E][ ] play (from: now to: 5hourslater)
 ____________________________________________________________
 
 User: 
