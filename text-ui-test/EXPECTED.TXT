@@ -60,7 +60,7 @@ User:
 ____________________________________________________________
 
 I have marked item 3 as done
-[T][X] play (from: now to: 5hourslater)
+[E][X] play (from: now to: 5hourslater)
 ____________________________________________________________
 
 User: 
@@ -76,7 +76,7 @@ User:
 ____________________________________________________________
 
 I have marked item 3 as not done yet
-[T][ ] play (from: now to: 5hourslater)
+[E][ ] play (from: now to: 5hourslater)
 ____________________________________________________________
 
 User: 
