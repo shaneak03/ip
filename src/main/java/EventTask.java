@@ -9,7 +9,13 @@ public class EventTask extends Task {
     }
 
     @Override
+    public String toSaveString() {
+        return "E" + super.toSaveString() +
+                String.format("| %s | %s ", this.start, this.end);
+    }
+
+    @Override
     public String toString() {
-        return String.format("[T]%s (from: %s to: %s)", super.toString(), start, end);
+        return String.format("[E]%s (from: %s to: %s)", super.toString(), start, end);
     }
 }

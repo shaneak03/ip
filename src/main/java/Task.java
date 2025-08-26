@@ -15,6 +15,10 @@ public class Task {
         this.isDone = false;
     }
 
+    public String toSaveString() {
+        return String.format(" | %b | %s ", this.isDone, this.desc);
+    }
+
     @Override
     public String toString() {
         String doneStatus = isDone ? "[X]" : "[ ]";
