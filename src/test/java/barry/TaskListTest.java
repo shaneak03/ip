@@ -23,4 +23,10 @@ public class TaskListTest {
         list.removeTask(0);
         assertEquals(0, list.size());
     }
+
+    @Test
+    public void removeTaskAtInvalidIndex() {
+        TaskList taskList = new TaskList();
+        assertThrows(IndexOutOfBoundsException.class, () -> taskList.removeTask(0));
+    }
 }

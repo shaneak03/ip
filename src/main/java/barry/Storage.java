@@ -14,11 +14,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 
 public class Storage {
-    private static final String filePath = "data" + File.separator + "barry.txt";
+    private static final String DEFAULT_PATH = "data/tasks.txt";
+    private String filePath = DEFAULT_PATH;
 
-    public Storage() {
+    public Storage(String filePath) {
         ensureParentDirExists();
         File file = new File(filePath);
+        this.filePath = filePath;
         try {
             if (!file.exists()) {
                 file.createNewFile();
@@ -28,34 +30,48 @@ public class Storage {
         }
     }
 
-    private static void ensureParentDirExists() {
-        File file = new File(filePath);
+    public Storage() {
+        ensureParentDirExists();
+        File file = new File(DEFAULT_PATH);
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+        } catch (IOException e) {
+            System.out.println("Error initializing storage file: " + e.getMessage());
+        }
+    }
+
+
+
+    private void ensureParentDirExists() {
+        File file = new File(this.filePath);
         File parentDir = file.getParentFile();
         if (parentDir != null && !parentDir.exists()) {
             parentDir.mkdirs();
         }
     }
 
-    public static void save(Task task) {
+    public void save(Task task) {
         ensureParentDirExists();
-        try (FileWriter writer = new FileWriter(filePath, true)) {
+        try (FileWriter writer = new FileWriter(this.filePath, true)) {
             writer.write(task.toSaveString() + System.lineSeparator());
         } catch (IOException e) {
             System.out.println("Error saving task: " + e.getMessage());
         }
     }
 
-    public static void delete() {
+    public void delete() {
         ensureParentDirExists();
-        try (FileWriter writer = new FileWriter(filePath)) {
+        try (FileWriter writer = new FileWriter(this.filePath)) {
         } catch (IOException e) {
             System.out.println("Error deleting tasks: " + e.getMessage());
         }
     }
 
-    public static void saveAllState(ArrayList<Task> taskList) {
+    public void saveAllState(ArrayList<Task> taskList) {
         ensureParentDirExists();
-        try (FileWriter writer = new FileWriter(filePath)) {
+        try (FileWriter writer = new FileWriter(this.filePath)) {
             for (Task task : taskList) {
                 writer.write(task.toSaveString() + System.lineSeparator());
             }
@@ -64,10 +80,10 @@ public class Storage {
         }
     }
 
-    public static ArrayList<Task> load() {
+    public ArrayList<Task> load() {
         ensureParentDirExists();
         ArrayList<Task> tasks = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(this.filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
