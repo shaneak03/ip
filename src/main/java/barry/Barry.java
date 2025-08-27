@@ -14,8 +14,8 @@ public class Barry {
     String input;
     String command;
     int index;
-    new Storage();
-    TaskList tasks = new TaskList(Storage.load());
+    Storage storage = new Storage();
+    TaskList tasks = new TaskList(storage.load());
 
         while (true) {
             input = ui.readCommand();
@@ -64,7 +64,7 @@ public class Barry {
                         }
                         Task task = tasks.getTask(index);
                         task.markDone();
-                        Storage.saveAllState(tasks.getAllTasks());
+                        storage.saveAllState(tasks.getAllTasks());
                         ui.showMessage(String.format("I have marked item %d as done", index + 1));
                         ui.showMessage(task.toString());
                         ui.showLine();
@@ -77,7 +77,7 @@ public class Barry {
                         }
                         Task t = tasks.getTask(index);
                         t.markUndone();
-                        Storage.saveAllState(tasks.getAllTasks());
+                        storage.saveAllState(tasks.getAllTasks());
                         ui.showMessage(String.format("I have marked item %d as not done yet", index + 1));
                         ui.showMessage(t.toString());
                         ui.showLine();
@@ -90,7 +90,7 @@ public class Barry {
                         }
                         Task taskToRemove = tasks.getTask(index);
                         tasks.removeTask(index);
-                        Storage.saveAllState(tasks.getAllTasks());
+                        storage.saveAllState(tasks.getAllTasks());
                         ui.showMessage("I have removed the following task:");
                         ui.showMessage(taskToRemove.toString());
                         ui.showMessage("Now you have " + tasks.size() + " tasks in your list");
@@ -150,7 +150,7 @@ public class Barry {
                         }
                         if (taskToAdd != null) {
                             tasks.addTask(taskToAdd);
-                            Storage.saveAllState(tasks.getAllTasks());
+                            storage.saveAllState(tasks.getAllTasks());
                             ui.showMessage("I've added this task into your list:");
                             ui.showMessage(taskToAdd.toString());
                             ui.showMessage(String.format("You now have %d task in the list", tasks.size()));
