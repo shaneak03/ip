@@ -27,6 +27,22 @@ public class TaskList {
         return tasks.remove(index);
     }
 
+    /**
+     * Returns a list of tasks whose descriptions contain the given keyword (case-insensitive).
+     *
+     * @param keyword the keyword to search for
+     * @return a list of matching tasks
+     */
+    public TaskList findTasks(String keyword) {
+        ArrayList<Task> result = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.matches(keyword)) {
+                result.add(task);
+            }
+        }
+        return new TaskList(result);
+    }
+
     public int size() {
         return tasks.size();
     }

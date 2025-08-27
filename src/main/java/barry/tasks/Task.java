@@ -26,4 +26,8 @@ public class Task {
         String doneStatus = isDone ? "[X]" : "[ ]";
         return String.format("%s %s", doneStatus, this.desc);
     }
+
+    public boolean matches(String keyword) {
+        return desc.toLowerCase().contains(keyword.toLowerCase());
+    }
 }

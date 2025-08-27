@@ -83,6 +83,26 @@ public class Barry {
                         ui.showLine();
                         continue;
 
+                    case "find":
+                        if (arguments.isEmpty()) {
+                            ui.showError("Please provide a keyword to search for!");
+                            break;
+                        }
+                        String keyword = arguments.trim();
+                        TaskList matches = tasks.findTasks(keyword);
+
+                        if (matches.size() == 0) {
+                            ui.showMessage("No matching tasks found.");
+                        } else {
+                            ui.showMessage("Here are the matching tasks in your list:");
+                            for (int i = 0; i < matches.size(); i++) {
+                                int num = i + 1;
+                                ui.showMessage(num + "." + matches.getTask(i));
+                            }
+                        }
+                        ui.showLine();
+                        continue;
+
                     case "delete":
                         if (index >= tasks.size() || index < 0) {
                             ui.showError("Invalid task number!");
