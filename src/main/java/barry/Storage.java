@@ -13,14 +13,22 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
+/**
+ * Handles saving and loading of tasks to and from a .txt file
+ */
 public class Storage {
     private static final String DEFAULT_PATH = "data/tasks.txt";
     private String filePath = DEFAULT_PATH;
 
+    /**
+     * Constructor for a Storage instance
+     * If filepath or parent directories does not exist, they will be created
+     * @param filePath the path to the storage file
+     */
     public Storage(String filePath) {
+        this.filePath = filePath;
         ensureParentDirExists();
         File file = new File(filePath);
-        this.filePath = filePath;
         try {
             if (!file.exists()) {
                 file.createNewFile();
@@ -30,6 +38,10 @@ public class Storage {
         }
     }
 
+    /**
+     * Constructor for a Storage instance using default filepath
+     * If filepath or parent directories does not exist, they will be created
+     */
     public Storage() {
         ensureParentDirExists();
         File file = new File(DEFAULT_PATH);
@@ -42,8 +54,9 @@ public class Storage {
         }
     }
 
-
-
+    /**
+     * Creates parent directories if they don't exist
+     */
     private void ensureParentDirExists() {
         File file = new File(this.filePath);
         File parentDir = file.getParentFile();
@@ -52,6 +65,10 @@ public class Storage {
         }
     }
 
+    /**
+     * Appends tasks to file
+     * @param task the task to save
+     */
     public void save(Task task) {
         ensureParentDirExists();
         try (FileWriter writer = new FileWriter(this.filePath, true)) {
@@ -61,6 +78,9 @@ public class Storage {
         }
     }
 
+    /**
+     * Clears all tasks in the storage file
+     */
     public void delete() {
         ensureParentDirExists();
         try (FileWriter writer = new FileWriter(this.filePath)) {
@@ -69,6 +89,10 @@ public class Storage {
         }
     }
 
+    /**
+     * Saves a list of tasks in the file
+     * @param taskList list of tasks to be saved
+     */
     public void saveAllState(ArrayList<Task> taskList) {
         ensureParentDirExists();
         try (FileWriter writer = new FileWriter(this.filePath)) {
@@ -80,6 +104,10 @@ public class Storage {
         }
     }
 
+    /**
+     * Reads all tasks from .txt file into an ArrayList of tasks
+     * @return ArrayList of tasks from file
+     */
     public ArrayList<Task> load() {
         ensureParentDirExists();
         ArrayList<Task> tasks = new ArrayList<>();
@@ -101,7 +129,7 @@ public class Storage {
                         if (isDone) todo.markDone();
                         tasks.add(todo);
                         break;
-                    case "d":
+                    case "D":
                         String deadline = parts[3];
                         Task deadlineTask = new DeadlineTask(desc, deadline);
                         if (isDone) deadlineTask.markDone();

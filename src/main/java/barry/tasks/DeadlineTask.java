@@ -20,7 +20,7 @@ public class DeadlineTask extends Task {
 
     @Override
     public String toSaveString() {
-        return "d" + super.toSaveString() + String.format("| %s ", deadline.format(INPUT_FORMAT));
+        return "D" + super.toSaveString() + String.format("| %s ", deadline.format(INPUT_FORMAT));
     }
 
     @Override

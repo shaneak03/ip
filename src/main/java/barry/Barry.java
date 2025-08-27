@@ -6,7 +6,39 @@ import barry.tasks.EventTask;
 import barry.tasks.Task;
 import barry.tasks.ToDoTask;
 
+/**
+ * The main entry point for the Barry chatbot.
+ * <p>
+ * This class initializes the user interface, task storage, and task list,
+ * and then enters an interactive command loop with the user.
+ * It parses input commands, executes the corresponding actions,
+ * and updates persistent storage as needed.
+ * </p>
+ *
+ * <h2>Supported commands</h2>
+ * <ul>
+ *   <li><b>{@code bye}</b> – Exit the program</li>
+ *   <li><b>{@code list}</b> – Show all tasks</li>
+ *   <li><b>{@code mark N}</b> – Mark task number {@code N} as done</li>
+ *   <li><b>{@code unmark N}</b> – Mark task number {@code N} as not done</li>
+ *   <li><b>{@code delete N}</b> – Remove task number {@code N}</li>
+ *   <li><b>{@code todo <desc>}</b> – Add a to-do task</li>
+ *   <li><b>{@code deadline <desc> /by yyyy-MM-dd HHmm}</b> – Add a deadline task</li>
+ *   <li><b>{@code event <desc> /from yyyy-MM-dd HHmm /to yyyy-MM-dd HHmm}</b> – Add an event task</li>
+ * </ul>
+ *
+ * <p>
+ * If a command is invalid or arguments are missing, an error message is displayed.
+ * </p>
+ */
 public class Barry {
+    /**
+     * Entry point of the application. Initializes the UI, storage, and task list,
+     * then starts a loop that continuously reads and processes user commands
+     * until the {@code bye} command is issued.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
 
     Ui ui = new Ui();
