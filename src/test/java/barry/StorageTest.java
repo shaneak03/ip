@@ -1,12 +1,16 @@
 package barry;
 
-import barry.tasks.Task;
-import barry.tasks.ToDoTask;
-import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import barry.tasks.Task;
+import barry.tasks.ToDoTask;
 
 public class StorageTest {
     private Storage storage;
