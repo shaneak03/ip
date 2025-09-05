@@ -1,4 +1,4 @@
-package barry;
+package barry.chatbot;
 
 import java.util.Scanner;
 
@@ -7,7 +7,7 @@ import java.util.Scanner;
  */
 public class Ui {
     private final Scanner scanner;
-    private final String line = "____________________________________________________________\n";
+    private static final String line = "____________________________________________________________\n";
 
     /**
      * Creates a {@code Ui} instance with a new {@link Scanner} to read input from User
@@ -27,6 +27,16 @@ public class Ui {
                 + " |______  /\\____|__  /____|_  /|____|_  // ______|\n"
                 + "        \\/         \\/       \\/        \\/ \\/    \n";
         System.out.println("Hello I'm Barry\n" + logo + "What can I do for you?\n" + line);
+    }
+
+    public static String getWelcome() {
+        String logo = "__________    _____ _________________________.___.\n"
+                + "\\______   \\  /  _  \\\\______   \\______   \\__  |   |\n"
+                + " |    |  _/ /  /_\\  \\|       _/|       _//   |   |\n"
+                + " |    |   \\/    |    \\    |   \\|    |   \\\\____   |\n"
+                + " |______  /\\____|__  /____|_  /|____|_  // ______|\n"
+                + "        \\/         \\/       \\/        \\/ \\/    \n";
+        return ("Hello I'm Barry\n" + logo + "What can I do for you?\n");
     }
 
     /**

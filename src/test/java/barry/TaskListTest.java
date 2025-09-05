@@ -1,9 +1,12 @@
-
 package barry;
 
-import barry.tasks.ToDoTask;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import barry.chatbot.TaskList;
+import barry.tasks.ToDoTask;
 
 public class TaskListTest {
     @Test

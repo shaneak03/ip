@@ -1,4 +1,4 @@
-package barry;
+package barry.chatbot;
 
 import java.util.ArrayList;
 

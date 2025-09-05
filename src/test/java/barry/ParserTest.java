@@ -1,8 +1,10 @@
 package barry;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import barry.chatbot.Parser;
 
 public class ParserTest {
     @Test

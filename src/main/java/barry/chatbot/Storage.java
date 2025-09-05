@@ -1,17 +1,16 @@
-package barry;
+package barry.chatbot;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import barry.tasks.DeadlineTask;
 import barry.tasks.EventTask;
 import barry.tasks.Task;
 import barry.tasks.ToDoTask;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.FileReader;
 
 /**
  * Handles saving and loading of tasks to and from a .txt file
@@ -124,26 +123,26 @@ public class Storage {
                 boolean isDone = parts[1].equals("true");
                 String desc = parts[2];
                 switch (type) {
-                    case "T":
-                        Task todo = new ToDoTask(desc);
-                        if (isDone) todo.markDone();
-                        tasks.add(todo);
-                        break;
-                    case "D":
-                        String deadline = parts[3];
-                        Task deadlineTask = new DeadlineTask(desc, deadline);
-                        if (isDone) deadlineTask.markDone();
-                        tasks.add(deadlineTask);
-                        break;
-                    case "E":
-                        String start = parts[3];
-                        String end = parts[4];
-                        Task eventTask = new EventTask(desc, start, end);
-                        if (isDone) eventTask.markDone();
-                        tasks.add(eventTask);
-                        break;
-                    default:
-                        System.out.println("Unknown task type: " + type);
+                case "T":
+                    Task todo = new ToDoTask(desc);
+                    if (isDone) todo.markDone();
+                    tasks.add(todo);
+                    break;
+                case "D":
+                    String deadline = parts[3];
+                    Task deadlineTask = new DeadlineTask(desc, deadline);
+                    if (isDone) deadlineTask.markDone();
+                    tasks.add(deadlineTask);
+                    break;
+                case "E":
+                    String start = parts[3];
+                    String end = parts[4];
+                    Task eventTask = new EventTask(desc, start, end);
+                    if (isDone) eventTask.markDone();
+                    tasks.add(eventTask);
+                    break;
+                default:
+                    System.out.println("Unknown task type: " + type);
                 }
             }
         } catch (IOException e) {
