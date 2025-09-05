@@ -1,4 +1,4 @@
-package barry;
+package barry.chatbot;
 
 /**
  * Utility class for parsing user input into commands and arguments.

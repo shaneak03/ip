@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import barry.chatbot.Storage;
+import barry.chatbot.TaskList;
 import barry.tasks.Task;
 import barry.tasks.ToDoTask;
 
