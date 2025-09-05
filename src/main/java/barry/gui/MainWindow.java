@@ -37,10 +37,12 @@ public class MainWindow extends AnchorPane {
     /** Injects the Barry instance */
     public void setBarry(Barry b) {
         barry = b;
+        setInitialDialog();
     }
 
     public void setInitialDialog() {
         DialogBox intro = DialogBox.getBarryDialog(Ui.getWelcome(), BarryImage);
+        dialogContainer.getChildren().add(intro);
     }
 
     /**
