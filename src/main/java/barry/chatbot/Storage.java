@@ -26,7 +26,7 @@ public class Storage {
      */
     public Storage(String filePath) {
         this.filePath = filePath;
-        ensureParentDirExists();
+        ensureParentDirectoryExists();
         File file = new File(filePath);
         try {
             if (!file.exists()) {
@@ -42,7 +42,7 @@ public class Storage {
      * If filepath or parent directories does not exist, they will be created
      */
     public Storage() {
-        ensureParentDirExists();
+        ensureParentDirectoryExists();
         File file = new File(DEFAULT_PATH);
         try {
             if (!file.exists()) {
@@ -56,7 +56,7 @@ public class Storage {
     /**
      * Creates parent directories if they don't exist
      */
-    private void ensureParentDirExists() {
+    private void ensureParentDirectoryExists() {
         File file = new File(this.filePath);
         File parentDir = file.getParentFile();
         if (parentDir != null && !parentDir.exists()) {
@@ -68,9 +68,9 @@ public class Storage {
      * Appends tasks to file
      * @param task the task to save
      */
-    public void save(Task task) {
+    public void saveTask(Task task) {
         assert task != null : "Task to save should not be null";
-        ensureParentDirExists();
+        ensureParentDirectoryExists();
         try (FileWriter writer = new FileWriter(this.filePath, true)) {
             writer.write(task.toSaveString() + System.lineSeparator());
         } catch (IOException e) {
@@ -81,8 +81,8 @@ public class Storage {
     /**
      * Clears all tasks in the storage file
      */
-    public void delete() {
-        ensureParentDirExists();
+    public void deleteAllTasks() {
+        ensureParentDirectoryExists();
         try (FileWriter writer = new FileWriter(this.filePath)) {
         } catch (IOException e) {
             System.out.println("Error deleting tasks: " + e.getMessage());
@@ -95,7 +95,7 @@ public class Storage {
      */
     public void saveAllState(ArrayList<Task> taskList) {
         assert taskList != null : "Task list to save should not be null";
-        ensureParentDirExists();
+        ensureParentDirectoryExists();
         try (FileWriter writer = new FileWriter(this.filePath)) {
             for (Task task : taskList) {
                 writer.write(task.toSaveString() + System.lineSeparator());
@@ -110,7 +110,7 @@ public class Storage {
      * @return ArrayList of tasks from file
      */
     public ArrayList<Task> load() {
-        ensureParentDirExists();
+        ensureParentDirectoryExists();
         ArrayList<Task> tasks = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(this.filePath))) {
             String line;
