@@ -11,6 +11,8 @@ public class EventTask extends Task {
 
     public EventTask(String desc, String startStr, String endStr) {
         super(desc);
+        assert startStr != null && !startStr.isEmpty() && endStr != null && !endStr.isEmpty()
+                : "start and end string should not be null or empty";
         this.start = LocalDateTime.parse(startStr, INPUT_FORMAT);
         this.end = LocalDateTime.parse(endStr, INPUT_FORMAT);
     }
