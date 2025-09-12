@@ -38,7 +38,7 @@ public class Barry {
      * Enum for all supported command words.
      */
     public static enum CommandWord {
-        BYE, LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT;
+    BYE, LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, FIND;
 
         /**
          * Converts a string to a CommandWord, case-insensitive.
@@ -84,28 +84,65 @@ public class Barry {
             if (cmd == null) {
                 throw new UnknownCommandException("I'm sorry, but I don't know what that means.");
             }
+            String response;
             switch (cmd) {
             case BYE:
-                return "Goodbye! Hope to see you again soon!\n";
+                response = "Goodbye! Hope to see you again soon!\n";
+                break;
             case LIST:
-                return handleList(tasks);
+                response = handleList(tasks);
+                break;
             case MARK:
-                return handleMark(index, tasks, storage);
+                response = handleMark(index, tasks, storage);
+                break;
             case UNMARK:
-                return handleUnmark(index, tasks, storage);
+                response = handleUnmark(index, tasks, storage);
+                break;
             case DELETE:
-                return handleDelete(index, tasks, storage);
+                response = handleDelete(index, tasks, storage);
+                break;
             case TODO:
-                return handleTodo(arguments, tasks, storage);
+                response = handleTodo(arguments, tasks, storage);
+                break;
             case DEADLINE:
-                return handleDeadline(arguments, tasks, storage);
+                response = handleDeadline(arguments, tasks, storage);
+                break;
             case EVENT:
-                return handleEvent(arguments, tasks, storage);
+                response = handleEvent(arguments, tasks, storage);
+                break;
+            case FIND:
+                response = handleFind(arguments, tasks);
+                break;
             default:
                 throw new UnknownCommandException("I'm sorry, but I don't know what that means.");
             }
+            return response;
         } catch (InvalidInputException | UnknownCommandException e) {
             return e.getMessage() + "\n";
+        }
+    }
+
+    /**
+     * Handles the 'find' command.
+     * @param arguments The keyword to search for.
+     * @param tasks The current TaskList.
+     * @return The formatted list of matching tasks, or a message if none found.
+     */
+    private static String handleFind(String arguments, TaskList tasks) {
+        if (arguments == null || arguments.trim().isEmpty()) {
+            return "Please provide a keyword to search for!\n";
+        }
+        String keyword = arguments.trim();
+        TaskList matches = tasks.findTasks(keyword);
+        if (matches.size() == 0) {
+            return "No matching tasks found.\n";
+        } else {
+            StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:\n");
+            for (int i = 0; i < matches.size(); i++) {
+                int num = i + 1;
+                sb.append(num).append(".").append(matches.getTask(i)).append("\n");
+            }
+            return sb.toString();
         }
     }
 
@@ -283,7 +320,7 @@ public class Barry {
             String input = ui.readCommand();
             String response = processCommand(input, tasks, storage);
             ui.showMessage(response);
-
+            ui.showLine();
             if (input.trim().equalsIgnoreCase("bye")) {
                 break;
             }
