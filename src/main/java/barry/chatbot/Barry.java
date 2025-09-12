@@ -65,6 +65,10 @@ public class Barry {
         String command = Parser.getCommand(input);
         String arguments = Parser.getArguments(input);
         int index = -1;
+        assert command != null : "Parsed command should not be null";
+        assert tasks != null : "TaskList should not be null";
+        assert storage != null : "Storage should not be null";
+
         CommandWord cmd = CommandWord.from(command);
         if (cmd == CommandWord.MARK || cmd == CommandWord.UNMARK || cmd == CommandWord.DELETE) {
             if (arguments.isEmpty()) {
