@@ -47,8 +47,8 @@ public class Barry {
         String arguments = Parser.getArguments(input);
         int index = -1;
         if (command.equalsIgnoreCase("mark") ||
-            command.equalsIgnoreCase("unmark") ||
-            command.equalsIgnoreCase("delete")) {
+                command.equalsIgnoreCase("unmark") ||
+                command.equalsIgnoreCase("delete")) {
             if (arguments.isEmpty()) {
                 return "Please specify the task number!\n";
             }
@@ -60,24 +60,24 @@ public class Barry {
         }
         try {
             switch (command.toLowerCase()) {
-                case "bye":
-                    return "Goodbye! Hope to see you again soon!\n";
-                case "list":
-                    return handleList(tasks);
-                case "mark":
-                    return handleMark(index, tasks, storage);
-                case "unmark":
-                    return handleUnmark(index, tasks, storage);
-                case "delete":
-                    return handleDelete(index, tasks, storage);
-                case "todo":
-                    return handleTodo(arguments, tasks, storage);
-                case "deadline":
-                    return handleDeadline(arguments, tasks, storage);
-                case "event":
-                    return handleEvent(arguments, tasks, storage);
-                default:
-                    throw new UnknownCommandException("I'm sorry, but I don't know what that means.");
+            case "bye":
+                return "Goodbye! Hope to see you again soon!\n";
+            case "list":
+                return handleList(tasks);
+            case "mark":
+                return handleMark(index, tasks, storage);
+            case "unmark":
+                return handleUnmark(index, tasks, storage);
+            case "delete":
+                return handleDelete(index, tasks, storage);
+            case "todo":
+                return handleTodo(arguments, tasks, storage);
+            case "deadline":
+                return handleDeadline(arguments, tasks, storage);
+            case "event":
+                return handleEvent(arguments, tasks, storage);
+            default:
+                throw new UnknownCommandException("I'm sorry, but I don't know what that means.");
             }
         } catch (InvalidInputException | UnknownCommandException e) {
             return e.getMessage() + "\n";
@@ -86,6 +86,7 @@ public class Barry {
 
     /**
      * Handles the 'list' command.
+     *
      * @param tasks The current TaskList.
      * @return The formatted list of tasks.
      */
@@ -99,8 +100,9 @@ public class Barry {
 
     /**
      * Handles the 'mark' command.
-     * @param index The index of the task to mark as done.
-     * @param tasks The current TaskList.
+     *
+     * @param index   The index of the task to mark as done.
+     * @param tasks   The current TaskList.
      * @param storage The Storage instance.
      * @return The response message.
      */
@@ -116,8 +118,9 @@ public class Barry {
 
     /**
      * Handles the 'unmark' command.
-     * @param index The index of the task to mark as not done.
-     * @param tasks The current TaskList.
+     *
+     * @param index   The index of the task to mark as not done.
+     * @param tasks   The current TaskList.
      * @param storage The Storage instance.
      * @return The response message.
      */
@@ -133,8 +136,9 @@ public class Barry {
 
     /**
      * Handles the 'delete' command.
-     * @param index The index of the task to delete.
-     * @param tasks The current TaskList.
+     *
+     * @param index   The index of the task to delete.
+     * @param tasks   The current TaskList.
      * @param storage The Storage instance.
      * @return The response message.
      */
@@ -150,9 +154,10 @@ public class Barry {
 
     /**
      * Handles the 'todo' command.
+     *
      * @param arguments The description of the todo task.
-     * @param tasks The current TaskList.
-     * @param storage The Storage instance.
+     * @param tasks     The current TaskList.
+     * @param storage   The Storage instance.
      * @return The response message.
      */
     private static String handleTodo(String arguments, TaskList tasks, Storage storage) {
@@ -167,9 +172,10 @@ public class Barry {
 
     /**
      * Handles the 'deadline' command.
+     *
      * @param arguments The arguments string containing description and deadline.
-     * @param tasks The current TaskList.
-     * @param storage The Storage instance.
+     * @param tasks     The current TaskList.
+     * @param storage   The Storage instance.
      * @return The response message.
      * @throws InvalidInputException if the input format is invalid.
      */
@@ -194,9 +200,10 @@ public class Barry {
 
     /**
      * Handles the 'event' command.
+     *
      * @param arguments The arguments string containing description, start, and end times.
-     * @param tasks The current TaskList.
-     * @param storage The Storage instance.
+     * @param tasks     The current TaskList.
+     * @param storage   The Storage instance.
      * @return The response message.
      * @throws InvalidInputException if the input format is invalid.
      */
