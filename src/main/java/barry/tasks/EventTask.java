@@ -23,6 +23,14 @@ public class EventTask extends Task {
         this.end = end;
     }
 
+    public LocalDateTime getStart() {
+        return this.start;
+    }
+
+    public LocalDateTime getEnd() {
+        return this.end;
+    }
+
     @Override
     public String toSaveString() {
         return "E" + super.toSaveString() + String.format("| %s | %s ", start.format(INPUT_FORMAT), end.format(INPUT_FORMAT));

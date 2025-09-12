@@ -19,6 +19,10 @@ public class DeadlineTask extends Task {
         this.deadline = deadline;
     }
 
+    public LocalDateTime getDeadline() {
+        return this.deadline;
+    }
+
     @Override
     public String toSaveString() {
         return "D" + super.toSaveString() + String.format("| %s ", deadline.format(INPUT_FORMAT));

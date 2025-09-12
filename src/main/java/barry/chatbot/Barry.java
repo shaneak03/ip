@@ -38,7 +38,7 @@ public class Barry {
      * Enum for all supported command words.
      */
     public static enum CommandWord {
-    BYE, LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, FIND;
+    BYE, LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, FIND, VIEW;
 
         /**
          * Converts a string to a CommandWord, case-insensitive.
@@ -113,6 +113,9 @@ public class Barry {
             case FIND:
                 response = handleFind(arguments, tasks);
                 break;
+            case VIEW:
+                response = handleViewSchedule(arguments, tasks);
+                break;
             default:
                 throw new UnknownCommandException("I'm sorry, but I don't know what that means.");
             }
@@ -120,6 +123,52 @@ public class Barry {
         } catch (InvalidInputException | UnknownCommandException e) {
             return e.getMessage() + "\n";
         }
+    }
+
+    /**
+     * Handles the 'viewschedule' command.
+     * @param arguments The date string (yyyy-MM-dd) to filter tasks/events.
+     * @param tasks The current TaskList.
+     * @return The formatted list of tasks/events scheduled for the date.
+     */
+    private static String handleViewSchedule(String arguments, TaskList tasks) {
+        if (arguments == null || arguments.trim().isEmpty()) {
+            return "Please provide a date in yyyy-MM-dd format!\n";
+        }
+        String dateStr = arguments.trim();
+        java.time.LocalDate queryDate;
+        try {
+            queryDate = java.time.LocalDate.parse(dateStr, java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        } catch (java.time.format.DateTimeParseException e) {
+            return "Invalid date format! Use yyyy-MM-dd.\n";
+        }
+        java.util.List<Task> scheduled = new java.util.ArrayList<>();
+        for (int i = 0; i < tasks.size(); i++) {
+            Task t = tasks.getTask(i);
+            if (t instanceof barry.tasks.DeadlineTask) {
+                barry.tasks.DeadlineTask d = (barry.tasks.DeadlineTask) t;
+                java.time.LocalDate deadlineDate = d.getDeadline().toLocalDate();
+                if (!deadlineDate.isBefore(queryDate)) {
+                    scheduled.add(t);
+                }
+            } else if (t instanceof barry.tasks.EventTask) {
+                barry.tasks.EventTask e = (barry.tasks.EventTask) t;
+                java.time.LocalDate startDate = e.getStart().toLocalDate();
+                java.time.LocalDate endDate = e.getEnd().toLocalDate();
+                if ((queryDate.isEqual(startDate) || queryDate.isAfter(startDate)) &&
+                    (queryDate.isEqual(endDate) || queryDate.isBefore(endDate))) {
+                    scheduled.add(t);
+                }
+            }
+        }
+        if (scheduled.isEmpty()) {
+            return "No tasks/events scheduled for this date.\n";
+        }
+        StringBuilder sb = new StringBuilder("Tasks/events scheduled for ").append(dateStr).append(":\n");
+        for (int i = 0; i < scheduled.size(); i++) {
+            sb.append(i + 1).append(".").append(scheduled.get(i)).append("\n");
+        }
+        return sb.toString();
     }
 
     /**

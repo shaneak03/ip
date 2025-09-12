@@ -1,1 +1,4 @@
 T | true | eat 
+T | false | eat 
+D | false | sleep | 2025-08-26 2359 
+E | false | play | 2025-08-26 1400 | 2025-08-26 1800 
