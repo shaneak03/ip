@@ -35,6 +35,25 @@ import barry.tasks.ToDoTask;
 public class Barry {
 
     /**
+     * Enum for all supported command words.
+     */
+    public static enum CommandWord {
+        BYE, LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT;
+
+        /**
+         * Converts a string to a CommandWord, case-insensitive.
+         * Returns null if not a valid command.
+         */
+        public static CommandWord from(String input) {
+            try {
+                return CommandWord.valueOf(input.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                return null;
+            }
+        }
+    }
+
+    /**
      * Processes a single user command and returns the response as a string.
      *
      * @param input   The user's input command.
@@ -46,9 +65,8 @@ public class Barry {
         String command = Parser.getCommand(input);
         String arguments = Parser.getArguments(input);
         int index = -1;
-        if (command.equalsIgnoreCase("mark") ||
-                command.equalsIgnoreCase("unmark") ||
-                command.equalsIgnoreCase("delete")) {
+        CommandWord cmd = CommandWord.from(command);
+        if (cmd == CommandWord.MARK || cmd == CommandWord.UNMARK || cmd == CommandWord.DELETE) {
             if (arguments.isEmpty()) {
                 return "Please specify the task number!\n";
             }
@@ -59,22 +77,25 @@ public class Barry {
             }
         }
         try {
-            switch (command.toLowerCase()) {
-            case "bye":
+            if (cmd == null) {
+                throw new UnknownCommandException("I'm sorry, but I don't know what that means.");
+            }
+            switch (cmd) {
+            case BYE:
                 return "Goodbye! Hope to see you again soon!\n";
-            case "list":
+            case LIST:
                 return handleList(tasks);
-            case "mark":
+            case MARK:
                 return handleMark(index, tasks, storage);
-            case "unmark":
+            case UNMARK:
                 return handleUnmark(index, tasks, storage);
-            case "delete":
+            case DELETE:
                 return handleDelete(index, tasks, storage);
-            case "todo":
+            case TODO:
                 return handleTodo(arguments, tasks, storage);
-            case "deadline":
+            case DEADLINE:
                 return handleDeadline(arguments, tasks, storage);
-            case "event":
+            case EVENT:
                 return handleEvent(arguments, tasks, storage);
             default:
                 throw new UnknownCommandException("I'm sorry, but I don't know what that means.");
