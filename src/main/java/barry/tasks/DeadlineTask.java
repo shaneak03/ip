@@ -10,6 +10,7 @@ public class DeadlineTask extends Task {
 
     public DeadlineTask(String desc, String deadlineStr) {
         super(desc);
+        assert deadlineStr != null && !deadlineStr.isEmpty() : "Deadline string should not be null or empty";
         this.deadline = LocalDateTime.parse(deadlineStr, INPUT_FORMAT);
     }
 

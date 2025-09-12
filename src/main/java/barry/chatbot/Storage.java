@@ -69,6 +69,7 @@ public class Storage {
      * @param task the task to save
      */
     public void save(Task task) {
+        assert task != null : "Task to save should not be null";
         ensureParentDirExists();
         try (FileWriter writer = new FileWriter(this.filePath, true)) {
             writer.write(task.toSaveString() + System.lineSeparator());
@@ -93,6 +94,7 @@ public class Storage {
      * @param taskList list of tasks to be saved
      */
     public void saveAllState(ArrayList<Task> taskList) {
+        assert taskList != null : "Task list to save should not be null";
         ensureParentDirExists();
         try (FileWriter writer = new FileWriter(this.filePath)) {
             for (Task task : taskList) {

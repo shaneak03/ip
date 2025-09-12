@@ -48,6 +48,10 @@ public class Barry {
         String arguments = Parser.getArguments(input);
         int index = -1;
 
+        assert command != null : "Parsed command should not be null";
+        assert tasks != null : "TaskList should not be null";
+        assert storage != null : "Storage should not be null";
+
         if (command.equalsIgnoreCase("mark") ||
                 command.equalsIgnoreCase("unmark") ||
                 command.equalsIgnoreCase("delete")) {
