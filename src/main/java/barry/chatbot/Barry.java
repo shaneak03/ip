@@ -43,14 +43,12 @@ public class Barry {
      * @return The response message to display to the user.
      */
     public static String processCommand(String input, TaskList tasks, Storage storage) {
-        StringBuilder response = new StringBuilder();
         String command = Parser.getCommand(input);
         String arguments = Parser.getArguments(input);
         int index = -1;
-
         if (command.equalsIgnoreCase("mark") ||
-                command.equalsIgnoreCase("unmark") ||
-                command.equalsIgnoreCase("delete")) {
+            command.equalsIgnoreCase("unmark") ||
+            command.equalsIgnoreCase("delete")) {
             if (arguments.isEmpty()) {
                 return "Please specify the task number!\n";
             }
@@ -60,121 +58,167 @@ public class Barry {
                 return "Invalid task number!\n";
             }
         }
-
         try {
             switch (command.toLowerCase()) {
-            case "bye":
-                response.append("Goodbye! Hope to see you again soon!\n");
-                break;
-
-            case "list":
-                response.append("Here are the tasks in your list:\n");
-                for (int i = 0; i < tasks.size(); i++) {
-                    int num = i + 1;
-                    response.append(num).append(".").append(tasks.getTask(i)).append("\n");
-                }
-                break;
-
-            case "mark":
-                if (index >= tasks.size() || index < 0) {
-                    return "Invalid task number!\n";
-                }
-                Task task = tasks.getTask(index);
-                task.markDone();
-                storage.saveAllState(tasks.getAllTasks());
-                response.append(String.format("I have marked item %d as done\n", index + 1));
-                response.append(task.toString()).append("\n");
-                break;
-
-            case "unmark":
-                if (index >= tasks.size() || index < 0) {
-                    return "Invalid task number!\n";
-                }
-                Task t = tasks.getTask(index);
-                t.markUndone();
-                storage.saveAllState(tasks.getAllTasks());
-                response.append(String.format("I have marked item %d as not done yet\n", index + 1));
-                response.append(t.toString()).append("\n");
-                break;
-
-            case "delete":
-                if (index >= tasks.size() || index < 0) {
-                    return "Invalid task number!\n";
-                }
-                Task taskToRemove = tasks.getTask(index);
-                tasks.removeTask(index);
-                storage.saveAllState(tasks.getAllTasks());
-                response.append("I have removed the following task:\n");
-                response.append(taskToRemove.toString()).append("\n");
-                response.append("Now you have ").append(tasks.size()).append(" tasks in your list\n");
-                break;
-
-            default:
-
-                Task taskToAdd = null;
-
-                switch (command.toLowerCase()) {
+                case "bye":
+                    return "Goodbye! Hope to see you again soon!\n";
+                case "list":
+                    return handleList(tasks);
+                case "mark":
+                    return handleMark(index, tasks, storage);
+                case "unmark":
+                    return handleUnmark(index, tasks, storage);
+                case "delete":
+                    return handleDelete(index, tasks, storage);
                 case "todo":
-                    if (arguments.isEmpty()) {
-                        response.append("The description of a todo cannot be empty\n");
-                        break;
-                    }
-                    String toDoDesc = arguments.trim();
-                    taskToAdd = new ToDoTask(toDoDesc);
-                    break;
-
-                case "deadline": {
-                    String[] deadlineParts = arguments.split("/by", 2);
-                    String deadlineDesc = deadlineParts[0].trim();
-                    String deadline = deadlineParts.length > 1 ? deadlineParts[1].trim() : "";
-                    if (deadlineDesc.isEmpty() || deadline.isEmpty()) {
-                        throw new InvalidInputException("Deadline description and date/time cannot be empty");
-                    }
-                    try {
-                        java.time.format.DateTimeFormatter deadlineFormat = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
-                        java.time.LocalDateTime.parse(deadline, deadlineFormat);
-                        taskToAdd = new DeadlineTask(deadlineDesc, deadline);
-                    } catch (java.time.format.DateTimeParseException e) {
-                        throw new InvalidInputException("Invalid deadline format! Use: deadline <desc> /by <date> (yyyy-MM-dd HHmm)");
-                    }
-                    break;
-                }
-
-                case "event": {
-                    String[] eventParts = arguments.split("/from|/to");
-                    String desc = eventParts[0].trim();
-                    String from = eventParts.length > 1 ? eventParts[1].trim() : "";
-                    String to = eventParts.length > 2 ? eventParts[2].trim() : "";
-                    if (desc.isEmpty() || from.isEmpty() || to.isEmpty()) {
-                        throw new InvalidInputException("Event description, start, and end cannot be empty");
-                    }
-                    try {
-                        java.time.format.DateTimeFormatter eventFormat = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
-                        java.time.LocalDateTime.parse(from, eventFormat);
-                        java.time.LocalDateTime.parse(to, eventFormat);
-                        taskToAdd = new EventTask(desc, from, to);
-                    } catch (java.time.format.DateTimeParseException e) {
-                        throw new InvalidInputException("Invalid event format! Use: event <desc> /from <start> /to <end> (yyyy-MM-dd HHmm)");
-                    }
-                    break;
-                }
+                    return handleTodo(arguments, tasks, storage);
+                case "deadline":
+                    return handleDeadline(arguments, tasks, storage);
+                case "event":
+                    return handleEvent(arguments, tasks, storage);
                 default:
                     throw new UnknownCommandException("I'm sorry, but I don't know what that means.");
-                }
-                if (taskToAdd != null) {
-                    tasks.addTask(taskToAdd);
-                    storage.saveAllState(tasks.getAllTasks());
-                    response.append("I've added this task into your list:\n");
-                    response.append(taskToAdd.toString()).append("\n");
-                    response.append(String.format("You now have %d task in the list\n", tasks.size()));
-                } else {
-                    throw new UnknownCommandException("An error has occurred, please try again");
-                }
             }
         } catch (InvalidInputException | UnknownCommandException e) {
-            response.append(e.getMessage()).append("\n");
+            return e.getMessage() + "\n";
+        }
+    }
+
+    /**
+     * Handles the 'list' command.
+     * @param tasks The current TaskList.
+     * @return The formatted list of tasks.
+     */
+    private static String handleList(TaskList tasks) {
+        StringBuilder response = new StringBuilder("Here are the tasks in your list:\n");
+        for (int i = 0; i < tasks.size(); i++) {
+            response.append(i + 1).append(".").append(tasks.getTask(i)).append("\n");
         }
         return response.toString();
+    }
+
+    /**
+     * Handles the 'mark' command.
+     * @param index The index of the task to mark as done.
+     * @param tasks The current TaskList.
+     * @param storage The Storage instance.
+     * @return The response message.
+     */
+    private static String handleMark(int index, TaskList tasks, Storage storage) {
+        if (index < 0 || index >= tasks.size()) {
+            return "Invalid task number!\n";
+        }
+        Task task = tasks.getTask(index);
+        task.markDone();
+        storage.saveAllState(tasks.getAllTasks());
+        return String.format("I have marked item %d as done\n%s\n", index + 1, task);
+    }
+
+    /**
+     * Handles the 'unmark' command.
+     * @param index The index of the task to mark as not done.
+     * @param tasks The current TaskList.
+     * @param storage The Storage instance.
+     * @return The response message.
+     */
+    private static String handleUnmark(int index, TaskList tasks, Storage storage) {
+        if (index < 0 || index >= tasks.size()) {
+            return "Invalid task number!\n";
+        }
+        Task task = tasks.getTask(index);
+        task.markUndone();
+        storage.saveAllState(tasks.getAllTasks());
+        return String.format("I have marked item %d as not done yet\n%s\n", index + 1, task);
+    }
+
+    /**
+     * Handles the 'delete' command.
+     * @param index The index of the task to delete.
+     * @param tasks The current TaskList.
+     * @param storage The Storage instance.
+     * @return The response message.
+     */
+    private static String handleDelete(int index, TaskList tasks, Storage storage) {
+        if (index < 0 || index >= tasks.size()) {
+            return "Invalid task number!\n";
+        }
+        Task task = tasks.getTask(index);
+        tasks.removeTask(index);
+        storage.saveAllState(tasks.getAllTasks());
+        return String.format("I have removed the following task:\n%s\nNow you have %d tasks in your list\n", task, tasks.size());
+    }
+
+    /**
+     * Handles the 'todo' command.
+     * @param arguments The description of the todo task.
+     * @param tasks The current TaskList.
+     * @param storage The Storage instance.
+     * @return The response message.
+     */
+    private static String handleTodo(String arguments, TaskList tasks, Storage storage) {
+        if (arguments.isEmpty()) {
+            return "The description of a todo cannot be empty\n";
+        }
+        Task task = new ToDoTask(arguments.trim());
+        tasks.addTask(task);
+        storage.saveAllState(tasks.getAllTasks());
+        return String.format("I've added this task into your list:\n%s\nYou now have %d task in the list\n", task, tasks.size());
+    }
+
+    /**
+     * Handles the 'deadline' command.
+     * @param arguments The arguments string containing description and deadline.
+     * @param tasks The current TaskList.
+     * @param storage The Storage instance.
+     * @return The response message.
+     * @throws InvalidInputException if the input format is invalid.
+     */
+    private static String handleDeadline(String arguments, TaskList tasks, Storage storage) throws InvalidInputException {
+        String[] deadlineParts = arguments.split("/by", 2);
+        String deadlineDesc = deadlineParts[0].trim();
+        String deadline = deadlineParts.length > 1 ? deadlineParts[1].trim() : "";
+        if (deadlineDesc.isEmpty() || deadline.isEmpty()) {
+            throw new InvalidInputException("Deadline description and date/time cannot be empty");
+        }
+        try {
+            java.time.format.DateTimeFormatter deadlineFormat = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+            java.time.LocalDateTime.parse(deadline, deadlineFormat);
+            Task task = new DeadlineTask(deadlineDesc, deadline);
+            tasks.addTask(task);
+            storage.saveAllState(tasks.getAllTasks());
+            return String.format("I've added this task into your list:\n%s\nYou now have %d task in the list\n", task, tasks.size());
+        } catch (java.time.format.DateTimeParseException e) {
+            throw new InvalidInputException("Invalid deadline format! Use: deadline <desc> /by <date> (yyyy-MM-dd HHmm)");
+        }
+    }
+
+    /**
+     * Handles the 'event' command.
+     * @param arguments The arguments string containing description, start, and end times.
+     * @param tasks The current TaskList.
+     * @param storage The Storage instance.
+     * @return The response message.
+     * @throws InvalidInputException if the input format is invalid.
+     */
+    private static String handleEvent(String arguments, TaskList tasks, Storage storage) throws InvalidInputException {
+        String[] eventParts = arguments.split("/from|/to");
+        String desc = eventParts[0].trim();
+        String from = eventParts.length > 1 ? eventParts[1].trim() : "";
+        String to = eventParts.length > 2 ? eventParts[2].trim() : "";
+        if (desc.isEmpty() || from.isEmpty() || to.isEmpty()) {
+            throw new InvalidInputException("Event description, start, and end cannot be empty");
+        }
+        try {
+            java.time.format.DateTimeFormatter eventFormat = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+            java.time.LocalDateTime.parse(from, eventFormat);
+            java.time.LocalDateTime.parse(to, eventFormat);
+            Task task = new EventTask(desc, from, to);
+            tasks.addTask(task);
+            storage.saveAllState(tasks.getAllTasks());
+            return String.format("I've added this task into your list:\n%s\nYou now have %d task in the list\n", task, tasks.size());
+        } catch (java.time.format.DateTimeParseException e) {
+            throw new InvalidInputException("Invalid event format! Use: event <desc> /from <start> /to <end> (yyyy-MM-dd HHmm)");
+        }
     }
 
     /**
