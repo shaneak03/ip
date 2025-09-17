@@ -23,6 +23,7 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
+            stage.setTitle("BARRY"); // Set the app name at the top
             fxmlLoader.<MainWindow>getController().setBarry(barry);
             stage.show();
         } catch (IOException e) {
