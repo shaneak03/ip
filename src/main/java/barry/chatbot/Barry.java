@@ -84,44 +84,40 @@ public class Barry {
             if (cmd == null) {
                 throw new UnknownCommandException("I'm sorry, but I don't know what that means.");
             }
-            String response;
-            switch (cmd) {
-            case BYE:
-                response = "Goodbye! Hope to see you again soon!\n";
-                break;
-            case LIST:
-                response = handleList(tasks);
-                break;
-            case MARK:
-                response = handleMark(index, tasks, storage);
-                break;
-            case UNMARK:
-                response = handleUnmark(index, tasks, storage);
-                break;
-            case DELETE:
-                response = handleDelete(index, tasks, storage);
-                break;
-            case TODO:
-                response = handleTodo(arguments, tasks, storage);
-                break;
-            case DEADLINE:
-                response = handleDeadline(arguments, tasks, storage);
-                break;
-            case EVENT:
-                response = handleEvent(arguments, tasks, storage);
-                break;
-            case FIND:
-                response = handleFind(arguments, tasks);
-                break;
-            case VIEW:
-                response = handleViewSchedule(arguments, tasks);
-                break;
-            default:
-                throw new UnknownCommandException("I'm sorry, but I don't know what that means.");
-            }
-            return response;
+            return dispatchCommand(cmd, arguments, index, tasks, storage);
         } catch (InvalidInputException | UnknownCommandException e) {
             return e.getMessage() + "\n";
+        }
+    }
+
+    /**
+     * Dispatches the command to the appropriate handler.
+     */
+    private static String dispatchCommand(CommandWord cmd, String arguments, int index, TaskList tasks, Storage storage)
+            throws InvalidInputException, UnknownCommandException {
+        switch (cmd) {
+        case BYE:
+            return "Goodbye! Hope to see you again soon!\n";
+        case LIST:
+            return handleList(tasks);
+        case MARK:
+            return handleMark(index, tasks, storage);
+        case UNMARK:
+            return handleUnmark(index, tasks, storage);
+        case DELETE:
+            return handleDelete(index, tasks, storage);
+        case TODO:
+            return handleTodo(arguments, tasks, storage);
+        case DEADLINE:
+            return handleDeadline(arguments, tasks, storage);
+        case EVENT:
+            return handleEvent(arguments, tasks, storage);
+        case FIND:
+            return handleFind(arguments, tasks);
+        case VIEW:
+            return handleViewSchedule(arguments, tasks);
+        default:
+            throw new UnknownCommandException("I'm sorry, but I don't know what that means.");
         }
     }
 
@@ -142,6 +138,17 @@ public class Barry {
         } catch (java.time.format.DateTimeParseException e) {
             return "Invalid date format! Use yyyy-MM-dd.\n";
         }
+        java.util.List<Task> scheduled = getScheduledTasksForDate(tasks, queryDate);
+        if (scheduled.isEmpty()) {
+            return "No tasks/events scheduled for this date.\n";
+        }
+        return formatScheduledTasksOutput(scheduled, dateStr);
+    }
+
+    /**
+     * Returns a list of tasks/events scheduled for the given date.
+     */
+    private static java.util.List<Task> getScheduledTasksForDate(TaskList tasks, java.time.LocalDate queryDate) {
         java.util.List<Task> scheduled = new java.util.ArrayList<>();
         for (int i = 0; i < tasks.size(); i++) {
             Task t = tasks.getTask(i);
@@ -161,9 +168,13 @@ public class Barry {
                 }
             }
         }
-        if (scheduled.isEmpty()) {
-            return "No tasks/events scheduled for this date.\n";
-        }
+        return scheduled;
+    }
+
+    /**
+     * Formats the output string for scheduled tasks/events for a given date.
+     */
+    private static String formatScheduledTasksOutput(java.util.List<Task> scheduled, String dateStr) {
         StringBuilder sb = new StringBuilder("Tasks/events scheduled for ").append(dateStr).append(":\n");
         for (int i = 0; i < scheduled.size(); i++) {
             sb.append(i + 1).append(".").append(scheduled.get(i)).append("\n");

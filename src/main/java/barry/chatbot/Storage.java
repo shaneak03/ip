@@ -117,39 +117,51 @@ public class Storage {
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
                 if (line.isEmpty()) continue;
-                String[] parts = line.split("\\|");
-                for (int i = 0; i < parts.length; i++) {
-                    parts[i] = parts[i].trim();
-                }
-                String type = parts[0];
-                boolean isDone = parts[1].equals("true");
-                String desc = parts[2];
-                switch (type) {
-                case "T":
-                    Task todo = new ToDoTask(desc);
-                    if (isDone) todo.markDone();
-                    tasks.add(todo);
-                    break;
-                case "D":
-                    String deadline = parts[3];
-                    Task deadlineTask = new DeadlineTask(desc, deadline);
-                    if (isDone) deadlineTask.markDone();
-                    tasks.add(deadlineTask);
-                    break;
-                case "E":
-                    String start = parts[3];
-                    String end = parts[4];
-                    Task eventTask = new EventTask(desc, start, end);
-                    if (isDone) eventTask.markDone();
-                    tasks.add(eventTask);
-                    break;
-                default:
-                    System.out.println("Unknown task type: " + type);
+                Task task = parseTaskFromLine(line);
+                if (task != null) {
+                    tasks.add(task);
                 }
             }
         } catch (IOException e) {
             System.out.println("Error loading tasks: " + e.getMessage());
         }
         return tasks;
+    }
+
+    /**
+     * Parses a line from the save file and returns the corresponding Task object.
+     * Returns null if the line is invalid or the type is unknown.
+     */
+    private Task parseTaskFromLine(String line) {
+        String[] parts = line.split("\\|");
+        for (int i = 0; i < parts.length; i++) {
+            parts[i] = parts[i].trim();
+        }
+        if (parts.length < 3) return null;
+        String type = parts[0];
+        boolean isDone = parts[1].equals("true");
+        String desc = parts[2];
+        switch (type) {
+        case "T":
+            Task todo = new ToDoTask(desc);
+            if (isDone) todo.markDone();
+            return todo;
+        case "D":
+            if (parts.length < 4) return null;
+            String deadline = parts[3];
+            Task deadlineTask = new DeadlineTask(desc, deadline);
+            if (isDone) deadlineTask.markDone();
+            return deadlineTask;
+        case "E":
+            if (parts.length < 5) return null;
+            String start = parts[3];
+            String end = parts[4];
+            Task eventTask = new EventTask(desc, start, end);
+            if (isDone) eventTask.markDone();
+            return eventTask;
+        default:
+            System.out.println("Unknown task type: " + type);
+            return null;
+        }
     }
 }

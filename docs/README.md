@@ -3,7 +3,7 @@
 ![UI Screenshot](./Ui.png)
 
 **Meet Barry the Speedster!**  
-Barry is your lightning-fast personal task manager! Inspired by the fastest hero around, Barry helps you capture, organize, and track your tasks in a flash. Whether you’re juggling deadlines, events, or daily to-dos, Barry’s intuitive interface and rapid responses ensure you stay on top of your work—no matter how fast life moves. Let Barry handle your tasks at super speed, so you can focus on what matters most!
+Barry is your lightning-fast personal task manager! Inspired by the fastest hero around, Barry helps you capture, organize, and track your tasks in a flash. Whether you’re juggling deadlines, events, or daily to-dos, Barry’s intuitive interface and rapid responses ensure you stay on top of your work, no matter how fast life moves. Let Barry handle your tasks at super speed, so you can focus on what matters most!
 
 ## Adding Tasks
 
