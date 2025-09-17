@@ -30,6 +30,6 @@ public class TaskListTest {
     @Test
     public void removeTaskAtInvalidIndex() {
         TaskList taskList = new TaskList();
-        assertThrows(IndexOutOfBoundsException.class, () -> taskList.removeTask(0));
+        assertThrows(AssertionError.class, () -> taskList.removeTask(0));
     }
 }
